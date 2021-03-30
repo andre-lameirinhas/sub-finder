@@ -5,10 +5,12 @@ from dotenv import load_dotenv
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-API_KEY = "5vA2m4IssF1LjW0EiqIEyTGszRfEXQxI"
+API_KEY = os.getenv('API_KEY')
 
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
+
+LOG_LEVEL = os.getenv('LOG_LEVEL')
 
 OPEN_SUBTITLES_URL = "https://www.opensubtitles.com"
 
