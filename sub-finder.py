@@ -2,9 +2,9 @@ import argparse
 import gateway as gw
 
 parser = argparse.ArgumentParser(description="Subtitles Finder")
-parser.add_argument("movie_name", type=str, help="Movie that needs subtitles")
+parser.add_argument("movie_name", type=str, help="movie that needs subtitles")
 parser.add_argument("-l", "--language", metavar="lang",
-                    type=str, default="en", help="Subtitle language")
+                    type=str, default="en", help="subtitle language")
 args = parser.parse_args()
 
 search_params = {
