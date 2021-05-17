@@ -1,11 +1,18 @@
-import argparse
+from argparse import ArgumentParser
 import gateway as gw
+import constants as cts
+import logging
 
-parser = argparse.ArgumentParser(description="Subtitles Finder")
+parser = ArgumentParser(description="Subtitles Finder")
 parser.add_argument("movie_name", type=str, help="movie that needs subtitles")
 parser.add_argument("-l", "--language", metavar="lang",
                     type=str, default="en", help="subtitle language")
 args = parser.parse_args()
+
+logging.basicConfig(
+    level=cts.LOG_LEVEL.upper(),
+    format=cts.LOG_FORMAT
+)
 
 search_params = {
     "query": args.movie_name,
@@ -14,15 +21,14 @@ search_params = {
     # "order_by": "download_count"
 }
 
-print(f"Searching for subtitles with params {search_params}")
 result = gw.search_subtitles(search_params)
 
 if result["total_count"] == 0:
-    exit("No subtitles found")
+    logging.info("No subtitles found")
+    exit()
 
 file_data = result["data"][0]["attributes"]["files"][0]
 
-print("Logging in")
 gw.login()
 
 download_body = {
@@ -31,14 +37,14 @@ download_body = {
     "file_name": file_data["file_name"].removesuffix(".srt")
 }
 
-print("Downloading subtitles metadata")
 sub_metadata = gw.download_subtitles_metadata(download_body)
 
-print("Downloading subtitles")
+filename = sub_metadata["file_name"]
+
 sub = gw.download_from_url(sub_metadata["link"])
 
-print("Writing subtitles to file")
-with open(sub_metadata["file_name"], "w", encoding="utf-8") as sub_file:
+logging.info(f"Writing subtitles to file {filename}")
+with open(filename, "w", encoding="utf-8") as sub_file:
     sub_file.write(sub.text)
 
-print("Process finished successfully")
+logging.info("Process finished successfully")

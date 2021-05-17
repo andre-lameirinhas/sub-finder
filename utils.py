@@ -1,5 +1,4 @@
 import json
 
-def print_json(content):
-    print(json.dumps(dict(content), indent = 3))
-    
+
+def ident_json(content): json.dumps(dict(content), indent=3)

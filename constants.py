@@ -10,7 +10,9 @@ API_KEY = os.getenv('API_KEY')
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
 
+# Logging
 LOG_LEVEL = os.getenv('LOG_LEVEL')
+LOG_FORMAT = '%(asctime)s [%(levelname)s] (%(module)s) - %(message)s'
 
 OPEN_SUBTITLES_URL = "https://www.opensubtitles.com"
 

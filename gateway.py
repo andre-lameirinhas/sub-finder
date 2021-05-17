@@ -1,15 +1,16 @@
-import requests
-from requests import Request
+from requests import Session
 import constants as cts
-import utils
+from utils import ident_json
+import logging
 
-session = requests.Session()
+session = Session()
 session.headers.update({
     "Api-Key": cts.API_KEY
 })
 
-def login():
 
+def login():
+    logging.info(f"Logging in with user {cts.USERNAME}")
     headers = {
         "Content-Type": "multipart/form-data"
     }
@@ -24,13 +25,6 @@ def login():
         headers=headers,
         data=body
     )
-    print("request headers")
-    utils.print_json(res.request.headers)
-    #print("response header")
-    #utils.print_json(res.headers)
-
-    print("response body")
-    utils.print_json(res.json())
 
     res.raise_for_status()
 
@@ -39,18 +33,21 @@ def login():
         "Authorization": f"Bearer {token}"
     })
 
+
 def search_subtitles(params: dict):
+    logging.info(f"Searching for subtitles with params {params}")
 
     res = session.get(
         url=cts.OPEN_SUBTITLES_URL + cts.SUBTITLES_ENDPOINT,
         params=params
     )
-
     res.raise_for_status()
+
     return res.json()
 
 
 def download_subtitles_metadata(body: dict):
+    logging.info(f"Downloading subtitles metadata with body {body}")
 
     headers = {
         "Content-Type": "multipart/form-data"
@@ -63,11 +60,15 @@ def download_subtitles_metadata(body: dict):
     )
 
     res.raise_for_status()
+
     return res.json()
 
 
 def download_from_url(url: str):
+    logging.info("Downloading subtitles from URL")
+
     res = session.get(url)
 
     res.raise_for_status()
+
     return res
