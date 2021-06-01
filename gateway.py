@@ -1,6 +1,5 @@
 from requests import Session
 import constants as cts
-from utils import ident_json
 import logging
 
 session = Session()
@@ -11,27 +10,35 @@ session.headers.update({
 
 def login():
     logging.info(f"Logging in with user {cts.USERNAME}")
-    headers = {
-        "Content-Type": "multipart/form-data"
-    }
-
-    body = {
-        "username": cts.USERNAME,
-        "password": cts.PASSWORD
-    }
 
     res = session.post(
         url=cts.OPEN_SUBTITLES_URL + cts.LOGIN_ENDPOINT,
-        headers=headers,
-        data=body
+        headers={"Content-Type": "multipart/form-data"},
+        data={
+            "username": cts.USERNAME,
+            "password": cts.PASSWORD
+        }
     )
 
     res.raise_for_status()
 
     token = res.json()["token"]
+
     session.headers.update({
         "Authorization": f"Bearer {token}"
     })
+
+# TODO Find out why logout does not logout
+
+
+def logout():
+    logging.info(f"Logging out with user {cts.USERNAME}")
+
+    res = session.delete(
+        url=cts.OPEN_SUBTITLES_URL + cts.LOGOUT_ENDPOINT
+    )
+
+    res.raise_for_status()
 
 
 def search_subtitles(params: dict):
@@ -46,29 +53,23 @@ def search_subtitles(params: dict):
     return res.json()
 
 
-def download_subtitles_metadata(body: dict):
+def download_subtitles(body: dict):
     logging.info(f"Downloading subtitles metadata with body {body}")
 
-    headers = {
-        "Content-Type": "multipart/form-data"
-    }
-
-    res = session.post(
+    metadata_response = session.post(
         url=cts.OPEN_SUBTITLES_URL + cts.DOWNLOAD_ENDPOINT,
-        headers=headers,
+        headers={"Content-Type": "multipart/form-data"},
         data=body
     )
 
-    res.raise_for_status()
+    metadata_response.raise_for_status()
 
-    return res.json()
+    download_link = metadata_response.json()["link"]
 
-
-def download_from_url(url: str):
     logging.info("Downloading subtitles from URL")
 
-    res = session.get(url)
+    subtitle_response = session.get(download_link)
 
-    res.raise_for_status()
+    subtitle_response.raise_for_status()
 
-    return res
+    return subtitle_response.text

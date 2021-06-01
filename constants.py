@@ -19,4 +19,5 @@ OPEN_SUBTITLES_URL = "https://www.opensubtitles.com"
 # Endpoints
 SUBTITLES_ENDPOINT = "/api/v1/subtitles"
 LOGIN_ENDPOINT = "/api/v1/login"
+LOGOUT_ENDPOINT = "/api/v1/logout"
 DOWNLOAD_ENDPOINT = "/api/v1/download"
