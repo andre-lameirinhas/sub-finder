@@ -53,6 +53,18 @@ def search_subtitles(params: dict):
     return res.json()
 
 
+def search_features(params: dict):
+    logging.info(f"Searching for feature with params {params}")
+
+    res = session.get(
+        url=cts.OPEN_SUBTITLES_URL + cts.FEAURES_ENDPOINT,
+        params=params
+    )
+    res.raise_for_status()
+
+    return res.json()
+
+
 def download_subtitles(body: dict):
     logging.info(f"Downloading subtitles metadata with body {body}")
 
