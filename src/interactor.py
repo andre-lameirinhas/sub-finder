@@ -26,6 +26,9 @@ def get_movie_subtitles(movie_name: str, year: str, language="en"):
         exit()
 
     search_params.pop("query")
+    if year:
+        search_params.pop("year")
+
     search_params.update({
         "id": feature_id
     })
