@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import interactor
 
 app = Flask(__name__)
@@ -6,8 +6,12 @@ app = Flask(__name__)
 
 @app.route('/movie/<movie_name>')
 def movie(movie_name: str):
+
+    year = request.args.get('year', default=None, type=int)
+
     interactor.get_movie_subtitles(
-        movie_name=movie_name
+        movie_name=movie_name,
+        year=year
     )
     return "Success", 200
 

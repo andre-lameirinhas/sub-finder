@@ -2,13 +2,17 @@ import gateway as gw
 import logging
 
 
-def get_movie_subtitles(movie_name: str, language="en"):
+def get_movie_subtitles(movie_name: str, year: str, language="en"):
     search_params = {
         "query": movie_name,
         "languages": language,
-        "type": "movie",
-        # "order_by": "download_count"
+        "type": "movie"
     }
+
+    if year:
+        search_params.update({
+            "year": year
+        })
 
     feature = gw.search_features(search_params)["data"][0]
 
@@ -55,7 +59,7 @@ def get_subtitles(search_params: dict, title="No title"):
     file_data = first_result["attributes"]["files"][0]
 
     file_id = file_data["file_id"]
-    file_name = file_data["file_name"] if file_data["file_name"] is not None else title
+    file_name = file_data["file_name"] if file_data["file_name"] else f"{title}.srt"
 
     download_body = {
         "file_id": file_id,

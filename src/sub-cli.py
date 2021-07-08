@@ -12,6 +12,8 @@ parser.add_argument("-e", "--episode", metavar="episode",
                     type=int, help="intended episode")
 parser.add_argument("-l", "--language", metavar="lang",
                     type=str, default="en", help="subtitle language")
+parser.add_argument("-y", "--year", metavar="year",
+                    type=int, help="resource release year")
 parser.add_argument("resource_name", type=str,
                     help="resource that needs subtitles")
 args = parser.parse_args()
@@ -26,7 +28,8 @@ resource_type = args.type
 if resource_type == "movie":
     interactor.get_movie_subtitles(
         movie_name=args.resource_name,
-        language=args.language
+        language=args.language,
+        year=args.year
     )
 elif resource_type == "episode":
     interactor.get_episode_subtitles(
